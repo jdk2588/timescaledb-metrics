@@ -21,27 +21,27 @@ jobs:
       run: go test -v ./...
 
     - name: Get RELEASE_TAG
-      if: startsWith(github.ref, 'release')
+      if: contains(github.ref, 'release')
       run: |
         echo ::set-env name=RELEASE_TAG::$(echo ${{ github.ref }} | rev | cut -d '/' -f1 | rev)
 
     - name: Build timescale metrics for linux x86_64
-      if: startsWith(github.ref, 'release')
+      if: contains(github.ref, 'release')
       run: env GOOS=linux GARCH=amd64 CGO_ENABLED=0 go build -ldflags="-X 'main.VERSION=v${{ env.RELEASE_TAG }}'" -o timescaledb_metrics_linux_x86_64 -installsuffix cgo github.com/last9/timescaledb-metrics/
 
     - name: Build timescale metrics for mac x86_64
-      if: startsWith(github.ref, 'release')
+      if: contains(github.ref, 'release')
       run: env GOOS=darwin GARCH=amd64 CGO_ENABLED=0 go build -ldflags="-X 'main.VERSION=v${{ env.RELEASE_TAG }}'" -o timescaledb_metrics_darwin_x86_64 -installsuffix cgo github.com/last9/timescaledb-metrics/
 
     - name: Get release
-      if: startsWith(github.ref, 'release')
+      if: contains(github.ref, 'release')
       id: get_release
       uses: bruceadams/get-release@v1.2.1
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
     - name: Upload release asset for linux_x86_64
-      if: startsWith(github.ref, 'release')
+      if: contains(github.ref, 'release')
       id: upload-artifact-linux
       uses: actions/upload-release-asset@v1
       env:
@@ -53,7 +53,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload release asset for darwin_x86_64
-      if: startsWith(github.ref, 'release')
+      if: contains(github.ref, 'release')
       id: upload-artifact-osx
       uses: actions/upload-release-asset@v1
       env:
