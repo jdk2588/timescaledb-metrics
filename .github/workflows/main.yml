@@ -36,7 +36,7 @@ jobs:
     - name: Upload release asset for linux_x86_64
       if: github.ref == 'refs/heads/master'
       id: upload-artifact-linux
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
       with:
@@ -48,7 +48,7 @@ jobs:
     - name: Upload release asset for darwin_x86_64
       if: github.ref == 'refs/heads/master'
       id: upload-artifact-osx
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
