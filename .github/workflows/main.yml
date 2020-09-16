@@ -1,0 +1,54 @@
+name: release
+on:
+  push:
+    paths:
+      - "**"
+
+jobs:
+  release:
+    name: timescaledb-metrics
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/setup-go@v1
+      with:
+        go-version: "1.13"
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Run tests
+      run: go test -v ./...
+
+    - name: Build timescale metrics for linux x86_64
+      run: env GOOS=linux GARCH=amd64 CGO_ENABLED=0 go build  -o timescaledb_metrics_linux_x86_64 -installsuffix cgo github.com/last9/timescaledb-metrics/
+
+    - name: Get the release tag
+      if: github.ref == 'refs/heads/master'
+      run: echo "::set-env name=VERSION::$(./timescaledb_metrics_linux_x86_64 -v > version 2>&1 && cat version)"
+
+    - name: Build timescale metrics for linux x86_64
+      run: env GOOS=linux GARCH=amd64 CGO_ENABLED=0 go build -ldflags="-X 'main.VERSION=v${{ env.VERSION }}" -o timescaledb_metrics_linux_x86_64 -installsuffix cgo github.com/last9/timescaledb-metrics/
+
+    - name: Build timescale metrics for mac x86_64
+      run: env GOOS=darwin GARCH=amd64 CGO_ENABLED=0 go build -ldflags="-X 'main.VERSION=v${{ env.VERSION }}'" -o timescaledb_metrics_darwin_x86_64 -installsuffix cgo github.com/last9/timescaledb-metrics/
+
+    - name: Upload release asset for linux_x86_64
+      if: github.ref == 'refs/heads/master'
+      id: upload-artifact-linux
+      uses: actions/upload-artifact@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: Linux x86_64
+        path: timescaledb_metrics_linux_x86_64
+
+    - name: Upload release asset for darwin_x86_64
+      if: github.ref == 'refs/heads/master'
+      id: upload-artifact-osx
+      uses: actions/upload-artifact@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: Mac OS x86_64
+        path: timescaledb_metrics_darwin_x86_64
