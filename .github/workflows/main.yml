@@ -40,7 +40,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.VERSION }}
+        tag_name: ${{ env.VERSION }}-linux
         release_name: timescaledb_metrics_linux_x86_64
         draft: false
         prerelease: false
@@ -52,7 +52,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.VERSION }}
+        tag_name: ${{ env.VERSION }}-darwin
         release_name: timescaledb_metrics_darwin_x86_64
         draft: false
         prerelease: false
