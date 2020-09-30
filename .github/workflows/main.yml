@@ -18,7 +18,7 @@ jobs:
       uses: actions/checkout@v1
         
     - name: Check for go mod
-      run: echo $GOPATH
+      run: ls $GOPATH
       
     - uses: actions/cache@v2
       with:
