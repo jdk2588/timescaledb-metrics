@@ -17,6 +17,9 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
         
+    - name: Check for cwd
+      run: pwd
+      
     - uses: actions/cache@v2
       with:
         path: ~/go/pkg/mod
